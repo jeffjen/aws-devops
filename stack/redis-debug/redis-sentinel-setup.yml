@@ -1,0 +1,50 @@
+redis-001:
+    command: "redis-server --port 6379 --timeout 0"
+    image: redis
+    labels:
+        service: /srv/redis/debug/nodes
+        port: "6379"
+        probe_type: "redis"
+    net: host
+
+redis-002:
+    command: "redis-server --port 7379 --timeout 0 --slaveof 127.0.0.1 6379"
+    image: redis
+    labels:
+        service: /srv/redis/debug/nodes
+        port: "7379"
+        probe_type: "redis"
+    net: host
+
+sentinel-001:
+    command: "redis-sentinel /data/sentinel.conf"
+    image: redis
+    labels:
+        service: /srv/redis/debug/sentinels
+        port: "26379"
+        probe_type: "sentinel"
+    net: host
+    volumes:
+        - ./26379.conf:/data/sentinel.conf
+
+sentinel-002:
+    command: "redis-sentinel /data/sentinel.conf"
+    image: redis
+    labels:
+        service: /srv/redis/debug/sentinels
+        port: "26378"
+        probe_type: "sentinel"
+    net: host
+    volumes:
+        - ./26378.conf:/data/sentinel.conf
+
+sentinel-003:
+    command: "redis-sentinel /data/sentinel.conf"
+    image: redis
+    labels:
+        service: /srv/redis/debug/sentinels
+        port: "26377"
+        probe_type: "sentinel"
+    net: host
+    volumes:
+        - ./26377.conf:/data/sentinel.conf

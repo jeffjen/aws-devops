@@ -1,0 +1,4 @@
+sentinel monitor {{.Name}} {{.MasterIp}} {{.MasterPort}} {{.Quorum}}
+sentinel down-after-milliseconds {{.Name}} {{.DownTime}}
+sentinel failover-timeout {{.Name}} {{.FailOverTime}}
+sentinel parallel-syncs {{.Name}} 1

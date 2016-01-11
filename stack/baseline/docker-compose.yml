@@ -1,0 +1,24 @@
+ambassador:
+    container_name: ambassador
+    command: "--addr 0.0.0.0:29091 --cluster debug --advertise 192.168.1.123:29091 --proxy2discovery etcd://192.168.1.86:2379"
+    env_file: /etc/environ
+    environment:
+        LOG_LEVEL: DEBUG
+    image: jeffjen/ambd:v_70
+    mem_limit: 128000000
+    net: isolated_nw
+    ports:
+        - "29091:29091"
+
+agent:
+    container_name: agent
+    command: "--addr 0.0.0.0:29092 --cluster debug --advertise 192.168.1.123:2375 etcd://ambassador:2379"
+    env_file: /etc/environ
+    image: jeffjen/docker-monitor:v_61
+    mem_limit: 128000000
+    net: isolated_nw
+    ports:
+        - "29092:29092"
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /tmp:/tmp
