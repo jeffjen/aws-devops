@@ -10,7 +10,7 @@ AGENT_VERION=latest
 AGENT_NOTIFICATION_URI=
 AGENT_NOTIFICATION_CHANNEL="#random"
 CLUSTER=
-ETCD_CLUSTER_ENDPOINTS="etcd://10.0.0.253:2379,10.0.2.96:2379,10.0.1.38:2379"
+ETCD_CLUSTER_ENDPOINTS=
 COMMAND="$@"
 SWAPSIZE="4G"
 REBOOT_NOW="N"
@@ -109,7 +109,7 @@ done
 config-docker-engine
 
 # Launch baseline management containers
-[ -z ${CLUSTER} ] || launch-agents
+[ -z ${CLUSTER} ] || [ -z ${ETCD_CLUSTER_ENDPOINTS} ] || launch-agents
 
 if [ ${REBOOT_NOW} = "N" ]; then
     read -p "System reboot required...(press enter) "
