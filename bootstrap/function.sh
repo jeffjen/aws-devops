@@ -164,6 +164,11 @@ else
     AgentIP=${EC2_PRIVAITE_IPV4}
 fi
 
+NOTIFICATION_FLAG=
+if [ ! -z ${AGENT_NOTIFICATION_URI} ]; then
+    NOTIFICATION_FLAG="--url ${AGENT_NOTIFICATION_URI} --channel ${AGENT_NOTIFICATION_CHANNEL}"
+fi
+
 docker create --restart=always --net=isolated_nw --name ambassador -m 128M \
     --env-file /etc/environment \
     -p 29091:29091 \
@@ -181,8 +186,6 @@ docker create --restart=always --net=isolated_nw --name agent -m 128M \
     jeffjen/docker-monitor:${AGENT_VERION} \
         --addr 0.0.0.0:29092 \
         --cluster ${CLUSTER} \
-        --advertise ${AgentIP}:2375 \
-        --url ${AGENT_NOTIFICATION_URI} \
-        --channel ${AGENT_NOTIFICATION_CHANNEL} \
+        --advertise ${AgentIP}:2375 ${NOTIFICATION_FLAG} \
         etcd://ambassador:2379
 }
